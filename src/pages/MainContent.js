@@ -10,11 +10,13 @@ import { useId } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createData, updateData } from "./source/slice";
 import ListContent from "./ListContent";
+import { Button } from "@mui/material";
 
 const MainContent = () => {
   const formData = useSelector((state) => state.data.contentData);
   const dispatch = useDispatch();
   let userid = Math.random() * 314000;
+  const [isEdit,setIsEdit]=useState(false);
   const [forms, setForms] = useState({
     id: userid,
     header: "",
@@ -45,6 +47,7 @@ const MainContent = () => {
   const handleupdate = () => {
     dispatch(updateData(forms));
      setForms({ id: userid, header: "", message: "" });
+     setIsEdit(false)
   };
   //show the selected data
   const handleEdit = (data) => {
@@ -55,6 +58,7 @@ const MainContent = () => {
       edit.message = grip.message;
     }
     setForms(edit);
+    setIsEdit(true);
   };
 
   return (
@@ -91,11 +95,12 @@ const MainContent = () => {
               }}
             >
               <RemoveRedEyeOutlinedIcon />
-              <StarBorderOutlinedIcon
+              {isEdit?<Button onClick={handleupdate}>Update</Button>:null}
+              {/* <StarBorderOutlinedIcon
                 style={{ cursor: "pointer" }}
                 onClick={handleupdate}
-              />
-              <DeleteOutlineOutlinedIcon />
+              /> */}
+              {/* <DeleteOutlineOutlinedIcon /> */}
               <SaveAltOutlinedIcon onClick={handleSave} />
             </div>
             <div

@@ -1,33 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteState, getState, saveState } from "./localStorage";
 
-const STORAGE_KEY = "formState";
+// const STORAGE_KEY = "formState";
+// const initialState = {
+//   data: getState(STORAGE_KEY),
+// };
 const initialState = {
-  data: getState(STORAGE_KEY),
+  contentData:[]
 };
 
 const dataSlice = createSlice({
-  name: "data",
+  name: "content",
   initialState,
   reducers: {
     createData(state, action) {
-      console.log("created", action.payload);
-      const newItem = action.payload;
-      // state.data.push(newItem);
-      saveState(STORAGE_KEY,newItem);
+      state.contentData.push(action.payload);
+    console.log('initial',initialState.data)
     },
-    deleteData(state, action) {
-      const id=action.payload;
-      console.log(id);
-       deleteState(STORAGE_KEY,id);
+    deleteData (state, action){
+      console.log(action.payload);
+      const id=action.payload
+      state.contentData = state.contentData.filter((item) => item.id !== id); // Remove by ID
     },
-    updateData(state,action){
-console.log("initial",initialState);
-
+    updateData: (state, action) => {
+       const { id,header,message } = action.payload;
+      const item = state.contentData.find((item) => item.id===id);
+      if (item) {
+        item.header = header; 
+        item.message = message; 
+      }
+      
     },
-    reset() {},
+    // reset() {},
   },
 });
-
 export const { createData, deleteData, updateData } = dataSlice.actions;
 export default dataSlice.reducer;

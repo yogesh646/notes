@@ -2,7 +2,7 @@ import { AddCircleOutlineOutlined } from '@mui/icons-material'
 import React, { useState } from 'react';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { checkin,categories } from './source/datas';
-const Left = () => {
+const SideContent = () => {
   const [isHovered, setIsHovered] = useState(false)
   
   return (
@@ -59,4 +59,4 @@ style={{
   )
 }
 
-export default Left
+export default SideContent;

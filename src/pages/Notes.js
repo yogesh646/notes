@@ -1,14 +1,14 @@
 import React from "react";
-import Left from "./Left";
-import Main from "./Main";
-import Subleft from "./Subleft";
+import SideContent from "./SideContent";
+import MainContent from "./MainContent";
+
 
 const Notes = () => {
   return (
     <div className="notes">
-      <Left />
+      <SideContent/>
       {/* <Subleft /> */}
-      <Main />
+      <MainContent />
     </div>
   );
 };

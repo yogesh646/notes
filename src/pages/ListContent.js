@@ -7,34 +7,23 @@ import { categories } from "./source/datas";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteData, updateData } from "./source/slice";
 
-const Subleft = ({ check, update }) => {
-  const loads = useSelector((state) => state.data.data);
+const ListContent = ({ editIndex }) => {
+  const formData = useSelector((state) => state.data.contentData);
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
-  const [list, setList] = useState(
-    JSON.parse(localStorage.getItem("formState")) || []
-  );
+
   const handleInputChange = (e) => {
     setQuery(e.target.value);
+  }
+  const handleOpen = (index) => {
+    editIndex(index);
+  }
+  
+  const handleDelete = (indexes) => {
+   dispatch(deleteData(indexes));
   };
-  const handleopen = (index) => {
-    check(index);
-  };
-  const handleupdate = (index) => {
-    dispatch(updateData(index));
-  };
-  const handledel = (indexes) => {
-    console.log("deleted");
-    dispatch(deleteData(indexes));
-  };
-  console.log("loads", JSON.parse(loads));
 
-  useEffect(() => {
-    const files = () =>
-      fetch(JSON.parse(localStorage.getItem("formState")) || []);
-    files();
-  });
-  const filtered = JSON.parse(loads)?.filter((a, b) =>
+  const searchData = formData?.filter((a, b) =>
     a.header.toLowerCase().startsWith(query.toLowerCase())
   );
   return (
@@ -60,13 +49,13 @@ const Subleft = ({ check, update }) => {
         }}
       >
         <span className="new-sub">
-          Total Files:<b>{list.length}</b>
+          Total Files:<b>{formData.length}</b>
         </span>
       </div>
       <div className="notes-container">
-        {filtered?.map((note, index) => (
+        {searchData?.map((note, index) => (
           <div className="note-next">
-            <div key={index} className="note" onClick={() => handleopen(index)}>
+            <div key={index} className="note" >
               <FolderCopyOutlined />
               <span>{note?.header}</span>
               <BorderColorOutlinedIcon
@@ -77,7 +66,7 @@ const Subleft = ({ check, update }) => {
                   right: 0,
                   position: "relative",
                 }}
-                onClick={() => handleupdate(index)}
+                onClick={() => handleOpen(index)}
               />
               <DeleteOutlineOutlinedIcon
                 style={{
@@ -87,7 +76,7 @@ const Subleft = ({ check, update }) => {
                   right: 0,
                   position: "relative",
                 }}
-                onClick={() => handledel(index)}
+                onClick={() => handleDelete(note.id)}
               />
             </div>
             <div className="note-message">
@@ -138,4 +127,4 @@ const Subleft = ({ check, update }) => {
   );
 };
 
-export default Subleft;
+export default ListContent;

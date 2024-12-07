@@ -6,62 +6,60 @@ import SaveAltOutlinedIcon from "@mui/icons-material/SaveAltOutlined";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import RecyclingOutlinedIcon from "@mui/icons-material/RecyclingOutlined";
-import Subleft from "./Subleft";
+import { useId } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setForm, reset, createData } from "./source/slice";
-const Main = () => {
-  const formData = useSelector((state) => state.data.formData);
-  // const loads=useSelector((state)=>state.data);
+import { createData, updateData } from "./source/slice";
+import ListContent from "./ListContent";
+
+const MainContent = () => {
+  const formData = useSelector((state) => state.data.contentData);
   const dispatch = useDispatch();
-  const [mainList, setMainList] = useState(
-    JSON.parse(localStorage.getItem("formState")) || []
-  );
-  // console.log("loads",loads);
-  let compare;
+  let userid = Math.random() * 314000;
   const [forms, setForms] = useState({
+    id: userid,
     header: "",
     message: "",
   });
-  const [updation, setupdation] = useState([]);
-  const load = {
+  console.log("forms", forms);
+
+  const edit = {
+    id: "",
     header: "header",
     message: "Messages",
   };
-
-  const [origin, setorigin] = useState([]);
-  const [error, setError] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  //input field function
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForms({ ...forms, [name]: value });
   };
+  //save
   const handleSave = (e) => {
     e.preventDefault();
     console.log("saved");
-  dispatch(createData(forms))
-    window.location.reload();
+    dispatch(createData(forms));
+    setForms({ id: userid, header: "", message: "" });
   };
-
-  const handleupdate = (data) => {
-    console.log("update", data);
+  //for id randomizing
+  useEffect(() => {}, [useId]);
+  //update the list
+  const handleupdate = () => {
+    dispatch(updateData(forms));
+     setForms({ id: userid, header: "", message: "" });
   };
-  const handleData = (data) => {
-    // console.log("datas",data);
-    compare = data;
-    const grip = mainList[data];
+  //show the selected data
+  const handleEdit = (data) => {
+    const grip = formData[data];
     if (grip) {
-      load.header = grip.header;
-      load.message = grip.message;
+      edit.id = grip.id;
+      edit.header = grip.header;
+      edit.message = grip.message;
     }
-    setForms(load);
-  };
-  const handledel = () => {
-    console.log("compare", compare);
+    setForms(edit);
   };
 
   return (
     <div className="main">
-      <Subleft check={handleData} update={handleupdate} />
+      <ListContent editIndex={handleEdit} />
       <div className="main-main">
         <div className="header-bar-container">
           <input
@@ -93,8 +91,11 @@ const Main = () => {
               }}
             >
               <RemoveRedEyeOutlinedIcon />
-              <StarBorderOutlinedIcon />
-              <DeleteOutlineOutlinedIcon onClick={handledel} />
+              <StarBorderOutlinedIcon
+                style={{ cursor: "pointer" }}
+                onClick={handleupdate}
+              />
+              <DeleteOutlineOutlinedIcon />
               <SaveAltOutlinedIcon onClick={handleSave} />
             </div>
             <div
@@ -117,4 +118,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default MainContent;
